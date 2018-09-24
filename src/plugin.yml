@@ -1,0 +1,8 @@
+name: ArtisticMaps
+main: com.github.blarosen95.ArtisticMaps.ArtisticMaps
+version: 1.0.0
+description: ArtMap for 1.13
+depend: []
+softdepend: []
+author: The_Dale_Gribble
+api-version: 1.13
