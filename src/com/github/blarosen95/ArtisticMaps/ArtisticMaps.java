@@ -74,11 +74,11 @@ public class ArtisticMaps extends JavaPlugin {
         return instance().artistHandler;
     }
 
-    public ProtocolHandler getProtocolHandler() {
+    public static ProtocolHandler getProtocolManager() {
         return instance().protocolHandler;
     }
 
-    public VersionHandler getBukkitVersion() {
+    public static VersionHandler getBukkitVersion() {
         return instance().bukkitVersion;
     }
 
