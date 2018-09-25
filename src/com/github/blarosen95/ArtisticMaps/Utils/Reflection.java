@@ -1,6 +1,9 @@
 package com.github.blarosen95.ArtisticMaps.Utils;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
+import com.github.blarosen95.ArtisticMaps.IO.ErrorLogger;
+import com.github.blarosen95.ArtisticMaps.IO.Protocol.In.Packet.ArtistPacket;
+import com.github.blarosen95.ArtisticMaps.IO.Protocol.In.Packet.PacketType;
 import io.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -125,8 +128,8 @@ public class Reflection {
 
                 float yaw, pitch;
                 try {
-                    yaw = ArtMap.getBukkitVersion().getVersion().getYaw(packet);
-                    pitch = ArtMap.getBukkitVersion().getVersion().getPitch(packet);
+                    yaw = ArtisticMaps.getBukkitVersion().getVersion().getYaw(packet);
+                    pitch = ArtisticMaps.getBukkitVersion().getVersion().getPitch(packet);
                 } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                     e.printStackTrace();
                     return null;

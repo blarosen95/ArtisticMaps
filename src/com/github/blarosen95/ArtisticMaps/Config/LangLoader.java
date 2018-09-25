@@ -2,6 +2,7 @@ package com.github.blarosen95.ArtisticMaps.Config;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
 
+import com.github.blarosen95.ArtisticMaps.IO.ErrorLogger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,9 +46,15 @@ class LangLoader {
         if (configuration.HIDE_PREFIX) Lang.PREFIX = "";
     }
 
+       private File getCustomLangFile() {
+        File customLang = new File(plugin.getDataFolder(), "lang.yml");
+        if (!customLang.exists()) ArtisticMaps.instance().writeResource("lang.yml", customLang);
+        return customLang;
+    }
+
     void save() {
         if (!usingCustomLang) return;
-        File langFile = getCustomFile();
+        File langFile = getCustomLangFile();
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(langFile, true));
             for (String key : missingStrings.keySet()) {
