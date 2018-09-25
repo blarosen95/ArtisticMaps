@@ -3,9 +3,11 @@ package com.github.blarosen95.ArtisticMaps.IO.Database;
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
 import com.github.blarosen95.ArtisticMaps.Color.Palette;
 import com.github.blarosen95.ArtisticMaps.IO.ErrorLogger;
+import com.github.blarosen95.ArtisticMaps.Painting.GenericMapRenderer;
 import com.github.blarosen95.ArtisticMaps.Utils.Reflection;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
@@ -86,5 +88,53 @@ public class Map {
         newMap.setMap(mapData);
         ArtisticMaps.getArtDatabase().cacheMap(newMap, mapData);
         return newMap;
+    }
+
+    public MapView getMap() {
+        return Bukkit.getMap(mapId);
+    }
+
+    public void setMap(byte[] map) {
+        setMap(map, true);
+    }
+
+    public void setMap(byte[] map, boolean updateRenderer) {
+        MapView mapView = getMapView();
+        Reflection.setWorldMap(mapView, map);
+        if (updateRenderer) setRenderer(new GenericMapRenderer(map));
+    }
+
+    public boolean exists() {
+        return getMap() != null;
+    }
+
+    public File getDataFile() {
+        return new File(getMapDataFolder(), "map_" + mapId + ".dat");
+    }
+
+    public void update(Player player) {
+        ArtisticMaps.getScheduler().runSafely(() -> player.sendMap(getMap()));
+    }
+
+    public short getMapId() {
+            return mapId;
+    }
+
+    private MapView getMapView() {
+        return (mapView != null) ? mapView :
+                (mapView = ArtisticMaps.getScheduler().callSync(() -> Bukkit.getMap(mapId)));
+    }
+
+    public enum Size {
+        MAX(128 * 128), STANDARD(32 * 32);
+        public final int value;
+
+        Size(int length) {
+            this.value = length;
+        }
+
+        public int size() {
+            return value;
+        }
     }
 }
