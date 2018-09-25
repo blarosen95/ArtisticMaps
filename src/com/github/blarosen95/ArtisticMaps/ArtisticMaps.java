@@ -70,7 +70,7 @@ public class ArtisticMaps extends JavaPlugin {
         return instance().scheduler;
     }
 
-    public ArtistHandler getArtistHandler() {
+    public static ArtistHandler getArtistHandler() {
         return instance().artistHandler;
     }
 
