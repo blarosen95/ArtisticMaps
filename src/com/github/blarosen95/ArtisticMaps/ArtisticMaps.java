@@ -1,5 +1,6 @@
 package com.github.blarosen95.ArtisticMaps;
 
+import com.github.blarosen95.ArtisticMaps.IO.Protocol.ProtocolHandler;
 import com.github.blarosen95.ArtisticMaps.Recipe.CanvasItem;
 import com.github.blarosen95.ArtisticMaps.Recipe.EaselItem;
 import com.github.blarosen95.ArtisticMaps.Recipe.PaintBrushItem;
@@ -15,7 +16,7 @@ import java.lang.ref.SoftReference;
 public class ArtisticMaps extends JavaPlugin {
 
     private static SoftReference<ArtisticMaps> pluginInstance = null;
-    private ProtocolHandler
+    private ProtocolHandler protocolHandler;
 
 
     public void onEnable() {

@@ -1,6 +1,7 @@
 package com.github.blarosen95.ArtisticMaps.Config;
 
 import com.github.blarosen95.ArtisticMaps.IO.Protocol.Out.WrappedPacket;
+import com.mysql.fabric.xmlrpc.base.Array;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -45,7 +46,23 @@ public enum Lang implements LangSet<String> {
                 key.message = ArtisticMaps.getProtocolManager().PACKET_SENDER.buildChatPacket(formattedMessage);
             }
         }
+        for (Array key : Array.values()) {
+            key.messages = loader.loadArray(key.name());
+        }
+        loader.save();
+        Filter.ILLEGAL_EXPRESSIONS.expressions = loader.loadRegex("ILLEGAL_EXPRESSIONS");
     }
+
+    @Override
+    public void send(CommandSender sender) {
+        if (message != null) sender.sendMessage(message);
+    }
+
+    @Override
+    public String get() {
+        return message;
+    }
+
 
     public enum ActionBar implements LangSet<WrappedPacket> {
         EASEL_HELP(false), NEED_CANVAS(true), PAINTING(false), SAVE_USAGE(false), ELSE_USING(true),
@@ -70,4 +87,40 @@ public enum Lang implements LangSet<String> {
             return message;
         }
     }
+
+    public enum Array implements LangSet<String[]> {
+        HELP_GETTING_STARTED, HELP_RECIPES, HELP_TOOLS, HELP_DYES, HELP_LIST, HELP_CLOSE, INFO_DYES, INFO_RECIPES,
+        INFO_TOOLS, TOOL_DYE, TOOL_PAINTBUCKET, TOOL_COAL, TOOL_FEATHER, TOOL_COMPASS, RECIPE_EASEL, RECIPE_CANVAS,
+        RECIPE_PAINTBUCKET, RECIPE_PAINT_BRUSH, CONSOLE_HELP;
+
+        private String[] messages = null;
+
+        @Override
+        public void send(CommandSender sender) {
+            if (messages != null) sender.sendMessage(messages);
+        }
+
+        @Override
+        public String[] get() {
+            return messages;
+        }
+    }
+
+    public enum Filter implements LangSet<String[]> {
+        ILLEGAL_EXPRESSIONS;
+
+        private String[] expressions = null;
+
+        @Override
+        public void send(CommandSender sender) {
+
+        }
+
+        @Override
+        public String[] get() {
+            return expressions;
+        }
+
+    }
+
 }

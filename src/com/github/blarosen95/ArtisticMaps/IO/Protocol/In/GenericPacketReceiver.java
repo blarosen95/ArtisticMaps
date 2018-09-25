@@ -1,8 +1,12 @@
 package com.github.blarosen95.ArtisticMaps.IO.Protocol.In;
 
+import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
+import com.github.blarosen95.ArtisticMaps.Config.Lang;
 import com.github.blarosen95.ArtisticMaps.Utils.Reflection;
 import com.google.common.collect.MapMaker;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -37,7 +41,7 @@ public class GenericPacketReceiver extends PacketReceiver {
     }
 
     @Override
-    public void unInjectPlayer(Player player) {
+    public void uninjectPlayer(Player player) {
 
         try {
             final Channel channel = getChannel(player);
@@ -62,7 +66,7 @@ public class GenericPacketReceiver extends PacketReceiver {
         if (channelLookup != null && channelLookup.size() > 0) {
 
             for (UUID player : channelLookup.keySet()) {
-                unInjectPlayer(Bukkit.getPlayer(player));
+                uninjectPlayer(Bukkit.getPlayer(player));
             }
             channelLookup.clear();
         }
@@ -72,7 +76,40 @@ public class GenericPacketReceiver extends PacketReceiver {
         Channel channel = channelLookup.get(player.getUniqueId());
 
         if (channel == null) {
-            channel = Reflection
+            channel = Reflection.getPlayerChannel(player);
+
+            if (channel == null) {
+                Bukkit.getLogger().warning(Lang.PREFIX + "Error binding player channel!");
+                return null;
+            }
+            channelLookup.put(player.getUniqueId(), channel);
+        }
+
+        return channel;
+    }
+
+    private Object  onPacketInAsync(Player player, Channel channel, Object packet) {
+        if (!ArtisticMaps.getArtistHandler().containsPlayer(player)) return packet;
+        return ArtisticMaps.getArtistHandler().handlePacket(player, Reflection.getArtistPacket(packet)) ? packet : null;
+    }
+
+    private final class PacketHandler extends ChannelDuplexHandler {
+        private Player player;
+
+        @Override
+        public void channelRead(ChannelHandlerContext context, Object msg) throws Exception {
+
+            final Channel channel = context.channel();
+
+            try {
+                msg = onPacketInAsync(player, channel, msg);
+
+            } catch (Exception e) {
+                ErrorLogger.log(e, "Error in onPacketInAsync().");
+            }
+            if (msg != null) {
+                super.channelRead(context, msg);
+            }
         }
     }
 

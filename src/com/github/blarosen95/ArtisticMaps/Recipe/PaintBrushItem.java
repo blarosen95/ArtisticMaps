@@ -25,11 +25,12 @@ public class PaintBrushItem implements Listener {
         this.name = name;
     }
 
-
+    public ItemMeta paintBrushMeta;
 
     public void customRecipe() {
         ItemStack paintBrushItem = new ItemStack(Material.FEATHER, 1);
-        ItemMeta paintBrushMeta = paintBrushItem.getItemMeta();
+        //ItemMeta paintBrushMeta = paintBrushItem.getItemMeta();
+        this.paintBrushMeta = paintBrushItem.getItemMeta();
 
         paintBrushMeta.setDisplayName(ChatColor.AQUA + "Paint Brush");
         ArrayList<String> paintBrushLore = new ArrayList<String>();
