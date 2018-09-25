@@ -33,17 +33,7 @@ public class ErrorLogger {
         File dataFolder = getDataFolder();
         ArtisticMaps.getScheduler().ASYNC.run(() -> {
             File file = new File(dataFolder, log);
-            if (!file.exists()) {
-                try {
-                    if (!(file.createNewFile())) {
-                        throwable.printStackTrace();
-                        return;
-                    }
-                } catch (IOException e) {
-                    throwable.printStackTrace();
-                    return;
-                }
-            }
+            if (doesNotExist(throwable, file)) return;
             FileWriter fileWriter;
             PrintWriter logger;
             try {
@@ -75,21 +65,26 @@ public class ErrorLogger {
         });
     }
 
+    private static boolean doesNotExist(Throwable throwable, File file) {
+        if (!file.exists()) {
+            try {
+                if (!(file.createNewFile())) {
+                    throwable.printStackTrace();
+                    return true;
+                }
+            } catch (IOException e) {
+                throwable.printStackTrace();
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void log(PreparedStatement statement, Throwable throwable) {
         File dataFolder = getDataFolder();
         ArtisticMaps.getScheduler().ASYNC.run(() -> {
             File file = new File(dataFolder, log);
-            if (!file.exists()) {
-                try {
-                    if (!(file.createNewFile())) {
-                        throwable.printStackTrace();
-                        return;
-                    }
-                } catch (IOException e) {
-                    throwable.printStackTrace();
-                    return;
-                }
-            }
+            if (doesNotExist(throwable, file)) return;
             FileWriter fileWriter;
             PrintWriter logger;
             try {
