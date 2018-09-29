@@ -9,6 +9,9 @@ import com.github.blarosen95.ArtisticMaps.IO.Protocol.In.Packet.ArtistPacket;
 import com.github.blarosen95.ArtisticMaps.Painting.ArtistHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import static com.github.blarosen95.ArtisticMaps.IO.Protocol.In.Packet.ArtistPacket.PacketInteract;
+import static com.github.blarosen95.ArtisticMaps.IO.Protocol.In.Packet.ArtistPacket.PacketInteract.InteractType;
+
 public class ProtocolLibReceiver extends PacketReceiver {
 
     public ProtocolLibReceiver() {
@@ -33,9 +36,9 @@ public class ProtocolLibReceiver extends PacketReceiver {
         if (packet.getType() == PacketType.Play.Client.LOOK) {
             float yaw = packet.getFloat().read(0);
             float pitch = packet.getFloat().read(1);
-            return new ArtisticPacket.PacketLook(yaw, pitch);
+            return new ArtistPacket.PacketLook(yaw, pitch);
         } else if (packet.getType() == PacketType.Play.Client.ARM_ANIMATION) {
-            return new ArtisticPacket.PacketArmSwing();
+            return new ArtistPacket.PacketArmSwing();
         } else if (packet.getType() == PacketType.Play.Client.USE_ENTITY) {
             EnumWrappers.EntityUseAction action = packet.getEntityUseActions().read(0);
             if (action == EnumWrappers.EntityUseAction.ATTACK) {

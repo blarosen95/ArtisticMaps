@@ -1,10 +1,23 @@
 package com.github.blarosen95.ArtisticMaps.Painting;
 
+//import com.github.blarosen95.ArtisticMaps.Recipe.PaintBrushItem;
+
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
 import com.github.blarosen95.ArtisticMaps.Config.Lang;
+import com.github.blarosen95.ArtisticMaps.Easel.Canvas;
+import com.github.blarosen95.ArtisticMaps.Easel.Easel;
+import com.github.blarosen95.ArtisticMaps.Easel.EaselEffect;
+import com.github.blarosen95.ArtisticMaps.IO.MapArt;
+import com.github.blarosen95.ArtisticMaps.IO.TitleFilter;
+import com.github.blarosen95.ArtisticMaps.IO.Database.Map;
 import com.github.blarosen95.ArtisticMaps.IO.Protocol.In.Packet.ArtistPacket;
+import com.github.blarosen95.ArtisticMaps.IO.Protocol.In.Packet.ArtistPacket.PacketInteract.InteractType;
 import com.github.blarosen95.ArtisticMaps.IO.Protocol.In.Packet.PacketType;
-import com.github.blarosen95.ArtisticMaps.Recipe.PaintBrushItem;
+import com.github.blarosen95.ArtisticMaps.Painting.Brush.BrushAction;
+import com.github.blarosen95.ArtisticMaps.Recipe.ArtMaterial;
+import com.github.blarosen95.ArtisticMaps.Utils.ItemUtils;
+import net.wesjd.anvilgui.AnvilGUI;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ArtistHandler {
     //TODO: better way of getting custom items' meta than below
-    public PaintBrushItem paintBrushItem = new PaintBrushItem();
+    //public PaintBrushItem paintBrushItem = new PaintBrushItem();
 
     private final ConcurrentHashMap<UUID, ArtSession> artists;
 
@@ -37,39 +50,40 @@ public class ArtistHandler {
                 session.updatePosition(packetLook.getYaw(), packetLook.getPitch());
                 return true;
                 //Handle the save brush
-            } else if (type == PacketType.INTERACT && sender.getInventory().getItemInMainHand().getItemMeta().equals(paintBrushItem.paintBrushMeta)) {
+            } else if (type == PacketType.INTERACT && ArtMaterial
+                    .getCraftItemType(sender.getInventory().getItemInMainHand()) == ArtMaterial.PAINT_BRUSH) {
                 //Handle clicks with paint brush saving art
                 if (sender.isInsideVehicle() && ArtisticMaps.getArtistHandler().containsPlayer(sender)) {
                     ArtisticMaps.getScheduler().ASYNC.run(() -> {
-                      new AnvilGUI(ArtisticMaps.instance(), sender, "Title?", (player, title) -> {
-                          TitleFilter filter = new TitleFilter(Lang.Filter.ILLEGAL_EXPRESSIONS.get());
-                          if (!filter.check(title)) {
-                              player.sendMessage(Lang.BAD_TITLE.get());
-                              return null;
-                          }
-                          Easel easel = session.getEasel();
-                          ArtisticMaps.getScheduler().SYNC.run(() -> {
-                              easel.playEffect(EaselEffect.SAVE_ARTWORK);
-                              Canvas canvas = Canvas.getCanvas(easel.getItem());
-                              MapArt art1 = ArtisticMaps.getArtDatabase().saveArtwork(canvas, title, player);
-                              if (art1 != null) {
-                                  ArtisticMaps.getArtistHandler().removePlayer(player);
-                                  easel.setItem(new ItemStack(Material.AIR));
-                                  ItemUtils.giveItem(player, art1.getMapItem());
-                                  player.sendMessage(String.format(Lang.PREFIX + Lang.SAVE_SUCCESS.get(), title));
-                              } else {
-                                  player.sendMessage(String.format(Lang.PREFIX + Lang.SAVE_FAILURE.get(), title));
-                              }
-                          });
-                          return null;
-                      });
+                        new AnvilGUI(ArtisticMaps.instance(), sender, "Title?", (player, title) -> {
+                            TitleFilter filter = new TitleFilter(Lang.Filter.ILLEGAL_EXPRESSIONS.get());
+                            if (!filter.check(title)) {
+                                player.sendMessage(Lang.BAD_TITLE.get());
+                                return null;
+                            }
+                            Easel easel = session.getEasel();
+                            ArtisticMaps.getScheduler().SYNC.run(() -> {
+                                easel.playEffect(EaselEffect.SAVE_ARTWORK);
+                                Canvas canvas = Canvas.getCanvas(easel.getItem());
+                                MapArt art1 = ArtisticMaps.getArtDatabase().saveArtwork(canvas, title, player);
+                                if (art1 != null) {
+                                    ArtisticMaps.getArtistHandler().removePlayer(player);
+                                    easel.setItem(new ItemStack(Material.AIR));
+                                    ItemUtils.giveItem(player, art1.getMapItem());
+                                    player.sendMessage(String.format(Lang.PREFIX + Lang.SAVE_SUCCESS.get(), title));
+                                } else {
+                                    player.sendMessage(String.format(Lang.PREFIX + Lang.SAVE_FAILURE.get(), title));
+                                }
+                            });
+                            return null;
+                        });
                     });
                 }
                 return false;
             } else if (type == PacketType.INTERACT) {
-                ArtistPacket.PacketInteract.InteractType click = ((ArtistPacket.PacketInteract) packet).getInteraction();
+                InteractType click = ((ArtistPacket.PacketInteract) packet).getInteraction();
                 session.paint(sender.getInventory().getItemInMainHand(),
-                        (click == ArtistPacket.PacketInteract.InteractType.ATTACK) ? BrushAction.LEFT_CLICK : BrushAction.RIGHT_CLICK);
+                        (click == InteractType.ATTACK) ? BrushAction.LEFT_CLICK : BrushAction.RIGHT_CLICK);
                 session.sendMap(sender);
                 return false;
             }
@@ -99,7 +113,7 @@ public class ArtistHandler {
     }
 
     public boolean containsPlayer(UUID player) {
-        return artists.containsKey(player)
+        return artists.containsKey(player);
     }
 
     public synchronized void removePlayer(final Player player) {

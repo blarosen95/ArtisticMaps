@@ -2,6 +2,7 @@ package com.github.blarosen95.ArtisticMaps.IO.Protocol.In;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
 import com.github.blarosen95.ArtisticMaps.Config.Lang;
+import com.github.blarosen95.ArtisticMaps.IO.ErrorLogger;
 import com.github.blarosen95.ArtisticMaps.Utils.Reflection;
 import com.google.common.collect.MapMaker;
 import io.netty.channel.Channel;

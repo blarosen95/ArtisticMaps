@@ -1,6 +1,8 @@
 package com.github.blarosen95.ArtisticMaps.Painting;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
+import com.github.blarosen95.ArtisticMaps.IO.Database.Map;
+import com.github.blarosen95.ArtisticMaps.IO.PixelTableManager;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapRenderer;

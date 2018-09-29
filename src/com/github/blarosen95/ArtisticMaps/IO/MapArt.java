@@ -1,5 +1,7 @@
 package com.github.blarosen95.ArtisticMaps.IO;
 
+import com.github.blarosen95.ArtisticMaps.IO.Database.Map;
+import com.github.blarosen95.ArtisticMaps.Recipe.ArtItem;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

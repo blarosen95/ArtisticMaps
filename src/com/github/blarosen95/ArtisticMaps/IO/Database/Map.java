@@ -1,7 +1,7 @@
 package com.github.blarosen95.ArtisticMaps.IO.Database;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
-import com.github.blarosen95.ArtisticMaps.Color.Palette;
+import com.github.blarosen95.ArtisticMaps.IO.CompressedMap;
 import com.github.blarosen95.ArtisticMaps.IO.ErrorLogger;
 import com.github.blarosen95.ArtisticMaps.Painting.GenericMapRenderer;
 import com.github.blarosen95.ArtisticMaps.Utils.Reflection;
@@ -28,7 +28,7 @@ public class Map {
     }
 
     public Map(MapView mapView) {
-        this.mapId = mapView.getID();
+        this.mapId = mapView.getId();
         this.mapView = mapView;
     }
 

@@ -1,8 +1,10 @@
 package com.github.blarosen95.ArtisticMaps.Painting.Brushes;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
+import com.github.blarosen95.ArtisticMaps.Color.ArtDye;
 import com.github.blarosen95.ArtisticMaps.Painting.Brush;
 import com.github.blarosen95.ArtisticMaps.Painting.CanvasRenderer;
+import com.github.blarosen95.ArtisticMaps.Recipe.ArtItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 

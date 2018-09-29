@@ -53,5 +53,4 @@ public abstract class ArtistPacket {
             INTERACT, ATTACK
         }
     }
-
 }

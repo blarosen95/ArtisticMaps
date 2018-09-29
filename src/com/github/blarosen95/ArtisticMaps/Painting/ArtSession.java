@@ -2,6 +2,14 @@ package com.github.blarosen95.ArtisticMaps.Painting;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
 import com.github.blarosen95.ArtisticMaps.Config.Lang;
+import com.github.blarosen95.ArtisticMaps.Easel.Easel;
+import com.github.blarosen95.ArtisticMaps.Event.PlayerMountEaselEvent;
+import com.github.blarosen95.ArtisticMaps.IO.Database.Map;
+import com.github.blarosen95.ArtisticMaps.Painting.Brushes.Dye;
+import com.github.blarosen95.ArtisticMaps.Painting.Brushes.Fill;
+import com.github.blarosen95.ArtisticMaps.Painting.Brushes.Flip;
+import com.github.blarosen95.ArtisticMaps.Recipe.ArtItem;
+import com.github.blarosen95.ArtisticMaps.Utils.VersionHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

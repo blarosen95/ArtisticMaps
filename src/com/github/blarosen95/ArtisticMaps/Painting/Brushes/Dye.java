@@ -1,6 +1,8 @@
 package com.github.blarosen95.ArtisticMaps.Painting.Brushes;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
+import com.github.blarosen95.ArtisticMaps.Color.ArtDye;
+import com.github.blarosen95.ArtisticMaps.Color.Palette;
 import com.github.blarosen95.ArtisticMaps.Painting.Brush;
 import com.github.blarosen95.ArtisticMaps.Painting.CanvasRenderer;
 import org.bukkit.inventory.ItemStack;

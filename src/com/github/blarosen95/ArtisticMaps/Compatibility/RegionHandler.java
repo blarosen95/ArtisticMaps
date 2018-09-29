@@ -1,5 +1,6 @@
 package com.github.blarosen95.ArtisticMaps.Compatibility;
 
+import com.github.blarosen95.ArtisticMaps.Easel.EaselEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

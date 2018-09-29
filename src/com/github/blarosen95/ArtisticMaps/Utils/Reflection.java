@@ -27,7 +27,7 @@ public class Reflection {
     public static Channel getPlayerChannel(Player player) {
         Channel channel;
         try {
-            channel = ArtisticMaps.getCompatManager.getReflectionManager().getPlayerChannel(player);
+            channel = ArtisticMaps.getCompatManager().getReflectionHandler().getPlayerChannel(player);
         } catch (Exception e) {
             ErrorLogger.log(e);
             return null;

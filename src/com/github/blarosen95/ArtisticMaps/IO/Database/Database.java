@@ -2,9 +2,14 @@ package com.github.blarosen95.ArtisticMaps.IO.Database;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
 import com.github.blarosen95.ArtisticMaps.Config.Lang;
+import com.github.blarosen95.ArtisticMaps.Easel.Canvas;
+import com.github.blarosen95.ArtisticMaps.Easel.Canvas.CanvasCopy;
+import com.github.blarosen95.ArtisticMaps.IO.CompressedMap;
 import com.github.blarosen95.ArtisticMaps.IO.ErrorLogger;
 import com.github.blarosen95.ArtisticMaps.IO.MapArt;
+import com.github.blarosen95.ArtisticMaps.IO.MapId;
 import com.github.blarosen95.ArtisticMaps.Utils.Reflection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -17,7 +22,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public final class Database {
-    private final String DATABASE_ACCESS_ERROR = "Error accessing database, try using /artmap reload.";
+    private final String DATABASE_ACCESS_ERROR = "Error accessing database, try using /artisticmaps reload.";
     private final ArtTable artworks;
     private final MapTable maps;
     private final SQLiteDatabase database;
@@ -25,7 +30,7 @@ public final class Database {
     private final BukkitRunnable AUTO_SAVE = new BukkitRunnable() {
         @Override
         public void run() {
-            for (UUID uuid : ArtMap.getArtistHandler().getArtists()) {
+            for (UUID uuid : ArtisticMaps.getArtistHandler().getArtists()) {
                 ArtisticMaps.getArtistHandler().getCurrentSession(uuid).persistMap(false);
             }
         }
@@ -51,7 +56,7 @@ public final class Database {
         try {
             db.loadArtworks();
         } catch (Exception e) {
-            ErrorLogger.log(e, "Error Loading ArtMap Database");
+            ErrorLogger.log(e, "Error Loading ArtisticMaps Database");
             return null;
         }
         return db;
@@ -71,10 +76,10 @@ public final class Database {
         MapArt mapArt = ArtisticMaps.getArtDatabase().getArtwork(title);
         if (mapArt != null) { // same name
             if (art instanceof Canvas.CanvasCopy) {
-                CanvasCopy copy = CanvasCopy.class.cast(art);
+                CanvasCopy copy = (CanvasCopy) art;
                 if (copy.getOriginalId() == mapArt.getMapId()) {
                     if (mapArt.getArtist().equals(player.getUniqueId()) || player.isOp()
-                            || player.hasPermission("artmap.admin")) {
+                            || player.hasPermission("artisticmaps.admin")) {
                         // update
                         MapView newView = getMap(art.getMapId());
                         // Force update of map data
@@ -166,14 +171,15 @@ public final class Database {
 
 
     private void loadArtworks() {
-        ArtMap.getScheduler().runSafely(() -> {
+        ArtisticMaps.getScheduler().runSafely(() -> {
             int artworksRestored = 0;
             for (MapId mapId : maps.getMapIds()) {
                 if (restoreMap(mapId)) artworksRestored++;
             }
             if (artworksRestored > 0)
-                ArtMap.instance().getLogger()
+                ArtisticMaps.instance().getLogger()
                         .info(artworksRestored + " corrupted artworks were restored. More info at https://gitlab.com/BlockStack/ArtMap/wikis/Common-Errors");
+//TODO: that wiki link needs to be processed into a more user friendly file/source
         });
     }
 

@@ -1,6 +1,7 @@
 package com.github.blarosen95.ArtisticMaps.Painting;
 
 import com.github.blarosen95.ArtisticMaps.ArtisticMaps;
+import com.github.blarosen95.ArtisticMaps.IO.PixelTableManager;
 
 class Cursor {
 
