@@ -1,0 +1,138 @@
+package com.github.blarosen95.ArtisticMaps.IO.Database;
+
+
+import com.github.blarosen95.ArtisticMaps.IO.ErrorLogger;
+
+import java.sql.*;
+
+public class SQLiteTable {
+    static final String sqlError = "Database error,";
+
+    private final SQLiteDatabase manager;
+    final String TABLE;
+    private final String creationSQL;
+
+    protected SQLiteTable(SQLiteDatabase database, String TABLE, String creationSQL) {
+        this.manager = database;
+        this.TABLE = TABLE;
+        this.creationSQL = creationSQL;
+    }
+
+    protected boolean create() {
+        Connection connection = null;
+        Statement buildTableStatement = null;
+
+        manager.getLock().lock();
+        try {
+            connection = manager.getConnection();
+            buildTableStatement = connection.createStatement();
+            buildTableStatement.executeUpdate(creationSQL);
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + TABLE);
+            ps.executeQuery();
+        } catch (SQLException e) {
+            ErrorLogger.log(e, SQLiteTable.sqlError);
+            return false;
+        } finally {
+            if (buildTableStatement != null) try {
+                buildTableStatement.close();
+            } catch (SQLException e) {
+                ErrorLogger.log(e, SQLiteTable.sqlError);
+            }
+            if (connection != null) try {
+                connection.close();
+            } catch (SQLException e) {
+                ErrorLogger.log(e, SQLiteTable.sqlError);
+            }
+            manager.getLock().unlock();
+        }
+        return true;
+    }
+
+    protected abstract class QueuedStatement extends ArtTable.QueuedQuery<Boolean> {
+
+        void executeBatch(String query) {
+            Connection connection = null;
+            PreparedStatement statement = null;
+            int[] result = new int[0];
+
+            manager.getLock().lock();
+            try {
+                connection = manager.getConnection();
+                statement = connection.prepareStatement(query);
+                prepare(statement);
+                result = statement.executeBatch();
+            } catch (Exception e) {
+                ErrorLogger.log(statement, e, sqlError);
+            } finally {
+                close(connection, statement);
+                manager.getLock().unlock();
+            }
+        }
+
+        @Override
+        protected Boolean read(ResultSet set) {
+            return false;//unused
+        }
+
+        @Override
+        public Boolean execute(String query) {
+            Connection connection = null;
+            PreparedStatement statement = null;
+            boolean result = false;
+
+            manager.getLock().lock();
+            try {
+                connection = manager.getConnection();
+                statement = connection.prepareStatement(query);
+                prepare(statement);
+                result = (statement.executeUpdate() != 0);
+            } catch (Exception e) {
+                ErrorLogger.log(statement, e, sqlError);
+            } finally {
+                close(connection, statement);
+                manager.getLock().unlock();
+            }
+            return result;
+        }
+    }
+
+    protected abstract class QueuedQuery<T> {
+
+        protected abstract void prepare(PreparedStatement statement) throws SQLException;
+
+        protected abstract T read(ResultSet set) throws SQLException;
+
+        void close(Connection connection, PreparedStatement statement) {
+            if (statement != null) try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (connection != null) try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public T execute(String query) {
+            Connection connection = null;
+            PreparedStatement statement = null;
+            T result = null;
+
+            manager.getLock().lock();
+            try {
+                connection = manager.getConnection();
+                statement = connection.prepareStatement(query);
+                prepare(statement);
+                result = read(statement.executeQuery());
+            } catch (Exception e) {
+                ErrorLogger.log(statement, e, sqlError);
+            } finally {
+                close(connection, statement);
+                manager.getLock().unlock();
+            }
+            return result;
+        }
+    }
+}
