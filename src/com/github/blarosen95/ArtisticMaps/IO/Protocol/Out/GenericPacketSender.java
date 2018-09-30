@@ -24,7 +24,7 @@ public class GenericPacketSender implements PacketSender {
 
     @Override
     public WrappedPacket<?> buildChatPacket(String message) {
-        return new WrappedPacket<>(builder.buildChatPacket(message)) {
+        return new WrappedPacket<Object>(builder.buildChatPacket(message)) {
             private final String rawMessage = message;
 
             @Override

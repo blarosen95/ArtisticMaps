@@ -34,7 +34,7 @@ public enum Lang implements LangSet<String> {
             if (configuration.DISABLE_ACTION_BAR) {
                 String formattedMessage = PREFIX + messageString.replaceAll("§l", "").replaceAll("§3", "§6")
                         .replaceAll("§4", "§c").replaceAll("§b", "§6");
-                key.message = new WrappedPacket<>(formattedMessage) {
+                key.message = new WrappedPacket<String>(formattedMessage) {
                     @Override
                     public void send(Player player) {
                         player.sendMessage(this.rawPacket);

@@ -20,7 +20,7 @@ public class ProtocolLibSender implements PacketSender {
 
     @Override
     public WrappedPacket<?> buildChatPacket(String message) {
-        return new WrappedPacket<>(builder.buildChatPacket(message)) {
+        return new WrappedPacket<PacketContainer>(builder.buildChatPacket(message)) {
             @Override
             public void send(Player player) {
                 try {
