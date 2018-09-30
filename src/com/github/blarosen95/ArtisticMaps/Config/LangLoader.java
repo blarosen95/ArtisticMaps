@@ -24,13 +24,13 @@ class LangLoader {
         plugin.getLogger().info(String.format("Loading '%s' language file", language.toLowerCase()));
         defaults = YamlConfiguration.loadConfiguration(plugin.getTextResourceFile("lang.yml"));
         lang = null;
-/*
+
         if (language.equalsIgnoreCase("custom")) {
             usingCustomLang = true;
             File customLang = getCustomLangFile();
             lang = YamlConfiguration.loadConfiguration(customLang);
         }
-        else */if (!language.equalsIgnoreCase("english")) {
+        else if (!language.equalsIgnoreCase("english")) {
             String languageFileName = String.format("lang%s.yml", File.separator + language);
             Reader langReader = plugin.getTextResourceFile(languageFileName);
             if (langReader != null) {

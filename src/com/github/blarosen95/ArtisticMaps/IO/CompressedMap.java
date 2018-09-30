@@ -48,11 +48,6 @@ public class CompressedMap extends MapId {
     }
 
     public byte[] decompressMap() {
-        try {
-            return compressedMap == null ? new byte[Map.Size.MAX.value] : new f32x32().readBLOB(compressedMap);
-        } catch (IOException e) {
-            ErrorLogger.log(e, "Decompression error!");
-            return null;
-        }
+        return compressedMap == null ? new byte[Map.Size.MAX.value] : new f32x32().readBLOB(compressedMap);
     }
 }

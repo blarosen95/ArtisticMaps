@@ -3,6 +3,43 @@ main: com.github.blarosen95.ArtisticMaps.ArtisticMaps
 version: 1.0.0
 description: ArtMap for 1.13
 depend: []
-softdepend: []
+softdepend: [ProtocolLib, GriefPrevention]
 author: The_Dale_Gribble
 api-version: 1.13
+
+commands:
+  art:
+    aliases: artisticmaps
+    usage: |
+      <command> save <title> : Save your artwork
+      <command> delete <title> : Delete your artwork
+      <command> preview <title> : Preview an artwork
+      <command> help : Display help
+      <command> reload : Reloads the config
+      <command> give <player> <easel|canvas|artwork:<title>> <amount> : Give a player ArtisticMaps items
+
+permissions:
+  artisticmaps.region.member:
+    description: Allows players to place/break easels in regions that they are a member of, but don't own.
+    default: op
+
+  artisticmaps.menu:
+    description: Allows players to open the ArtisticMaps menu.
+    default: true
+
+  artisticmaps.artist:
+    description: Allows players to paint, and place/break easels in any region that they own or are a member of.
+    children:
+      artisticmaps.region.member: true
+    defualt: op
+
+  artisticmaps.artkit:
+    description: Gives players a kit of art supplies while they use an easel
+    default: op
+
+  artisticmaps.admin:
+    description: Allows administrative commands
+    children:
+      artisticmaps.artist: true
+      artisticmaps.artkit: true
+    default: op
