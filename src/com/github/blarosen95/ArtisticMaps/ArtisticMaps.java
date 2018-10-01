@@ -22,6 +22,8 @@ import com.github.blarosen95.ArtisticMaps.Preview.PreviewManager;
 import com.github.blarosen95.ArtisticMaps.Recipe.RecipeLoader;
 import com.github.blarosen95.ArtisticMaps.Utils.Scheduler;
 import com.github.blarosen95.ArtisticMaps.Utils.VersionHandler;
+
+
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -146,11 +148,11 @@ public class ArtisticMaps extends JavaPlugin {
             return;
         }
         new OldDatabaseConverter(this).convertDatabase(); //TODO we probably won't need this until 1.14 (if even then)
-        if ((pixelTable = PixelTableManager.buildTables(this)) == null) {
-            getLogger().warning(Lang.INVALID_DATA_TABLES.get());
-            getPluginLoader().disablePlugin(this);
-            return;
-        }
+            if ((pixelTable = PixelTableManager.buildTables(this)) == null) {
+                getLogger().warning(Lang.INVALID_DATA_TABLES.get());
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
         if (!recipesLoaded) {
             recipeLoader = new RecipeLoader(this, config);
             recipeLoader.loadRecipes();

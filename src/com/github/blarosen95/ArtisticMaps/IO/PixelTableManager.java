@@ -1,8 +1,9 @@
 package com.github.blarosen95.ArtisticMaps.IO;
 
-//TODO: Fix awful package name for DataTables imports
-import main.java.me.Fupery.DataTables.DataTables;
-import main.java.me.Fupery.DataTables.PixelTable;
+//~~TODO: Fix awful package name for DataTables imports~~ DONE
+import me.Fupery.DataTables.DataTables;
+import me.Fupery.DataTables.PixelTable;
+import me.Fupery.DataTables.DataTables.InvalidResolutionFactorException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PixelTableManager {
@@ -17,12 +18,14 @@ public class PixelTableManager {
     }
 
     public static PixelTableManager buildTables(JavaPlugin plugin) {
+        System.out.println("21PTM");
         PixelTable table;
         int mapResolutionFactor = 4;
         try {
+            System.out.println(mapResolutionFactor);
             table = DataTables.loadTable(mapResolutionFactor);
             return new PixelTableManager(mapResolutionFactor, table.getYawBounds(), table.getPitchBounds());
-        } catch (Exception | NoClassDefFoundError | DataTables.InvalidResolutionFactorException e) {
+        } catch (Exception | NoClassDefFoundError | InvalidResolutionFactorException e) {
             return null;
         }
     }
